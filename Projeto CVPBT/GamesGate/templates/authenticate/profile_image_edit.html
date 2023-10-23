@@ -1,0 +1,22 @@
+{% extends "nav.html" %}
+{% block title %}User Edit Profile Image{% endblock title %}
+{% block content %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-9 mt-4">
+      <div class="shadow p-4 mb-5 bg-body rounded">
+        <h1 class="text-center">Edit User Profile Image</h1>
+        <form action="{% url 'change_profile_image' %}" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <div class="d-flex justify-content-center mt-3">
+            <button class="btn btn-success mx-1" type="submit">Update</button>
+            <a href="{% url 'user_data' %}" class="btn btn-success">No, go back</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
