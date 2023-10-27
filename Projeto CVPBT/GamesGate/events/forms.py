@@ -14,8 +14,8 @@ class CategorieForm(forms.ModelForm):
 
 class CampoCreateForm(forms.ModelForm):
     class Meta:
-        model = Post
-        fields = ('title', 'localizacaop', 'content', )
+        model = Campo
+        fields = ('title', 'localizacao', 'content', )
 
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),

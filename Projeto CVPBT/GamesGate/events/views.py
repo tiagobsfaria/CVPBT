@@ -1,7 +1,14 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
+from django.views.generic import ListView, DetailView
+from django.views.generic.edit import UpdateView, DeleteView, CreateView
+from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404
+from django.contrib import messages
 from django.http import JsonResponse
+
+from .models import Categorie, Campo
+from .forms import CategorieForm, CampoCreateForm
 
 # Create your views here.
 class home(TemplateView):
