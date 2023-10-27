@@ -5,6 +5,7 @@ from .views import (
         CategorieEditView,
         CategorieCreateView,
         CategorieDeleteView,
+        AdminPanelView,
     )
 urlpatterns = [
     path("", home.as_view(), name="home"),
@@ -12,5 +13,6 @@ urlpatterns = [
     path("categories/<int:pk>/edit/", CategorieEditView.as_view(), name="category_edit"),
     path("categories/<int:pk>/delete/", CategorieDeleteView.as_view(), name="category_delete"),
     path("categories/new/", CategorieCreateView.as_view(), name="category_create"),
+    path("adminpanel", AdminPanelView.as_view(),  name="admin_panel"),
 
 ]

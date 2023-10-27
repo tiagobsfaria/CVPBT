@@ -33,7 +33,7 @@
     {% if user.is_authenticated %}
         {% if user.is_superuser %}
             <div class="ms-auto">
-                <a class="btn btn-default me-2 text-white" href="">Painel de administrador</a>
+                <a class="btn btn-default me-2 text-white" href="{% url 'admin_panel' %}">Painel de administrador</a>
             </div>
         {% endif %}
     <div class="ms-auto">

@@ -48,6 +48,9 @@ class CategorieDetailView(DetailView):
     model = Categorie
     template_name = "categorie_detail.html"
 
+class AdminPanelView(TemplateView):
+    template_name = 'admin_panel.html'
+
 
 def add_evaluation(request, campo_id, new_rating):
     # Retrieve the Campo instance
