@@ -4,49 +4,58 @@ from django.views.generic import ListView, DetailView
 from django.views.generic.edit import UpdateView, DeleteView, CreateView
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404
-from django.contrib import messages
 from django.http import JsonResponse
 
-from .models import Categorie, Campo
-from .forms import CategorieForm, CampoCreateForm
+from .models import Campo, Categorie, Localizacao
+from .forms import CampoForm
 
 # Create your views here.
-class home(TemplateView):
-    template_name = 'home.html'
+
+def home(request):
+    categories = Categorie.objects.all()
+    return render(request, 'home.html', {'categories': categories})
+
+def get_localizacoes(request, category_id):
+    localizacoes = Localizacao.objects.filter(categorie=category_id)
+    localizacoes_data = [{'id': loc.id, 'title': loc.title} for loc in localizacoes]
+    return JsonResponse(localizacoes_data, safe=False)
+
+
+
 
 class CategorieListView(ListView):
     model = Categorie
-    template_name = "categories_list.html"
+    template_name = "categorie_list.html"
 
+class CampoListView(ListView):
+    model = Campo
+    template_name = "campo_list.html"
 
-def CategorieView(request, cats):
-    return render(request, 'campo.html', {"cats":cats})
-
-class CategorieCreateView(CreateView):
-    model = Categorie
-    template_name = "categorie_create.html"
-    form_class = CategorieForm
-    success_url = reverse_lazy("list-categories")
+class CampoCreateView(CreateView):
+    model = Campo
+    template_name = "campo_create.html"
+    form_class = CampoForm
+    success_url = reverse_lazy("list-campos")
 
     def form_valid(self, form):
         form.instance.author = self.request.user  # Set the author to the logged-in user
         return super().form_valid(form)
 
-class CategorieDeleteView(DeleteView):
-    model = Categorie
-    template_name = "categorie_delete.html"
+class CampoDeleteView(DeleteView):
+    model = Campo
+    template_name = "campo_delete.html"
 
-    success_url = reverse_lazy("list-categories")
+    success_url = reverse_lazy("list-campos")
 
-class CategorieEditView(UpdateView):
-    model = Categorie
-    template_name = "categorie_edit.html"
-    form_class = CategorieForm
-    success_url = reverse_lazy("list-categories")
+class CampoEditView(UpdateView):
+    model = Campo
+    template_name = "campo_edit.html"
+    form_class = CampoForm
+    success_url = reverse_lazy("list-campos")
 
-class CategorieDetailView(DetailView):
-    model = Categorie
-    template_name = "categorie_detail.html"
+class CampoDetailView(DetailView):
+    model = Campo
+    template_name = "campo_detail.html"
 
 class AdminPanelView(TemplateView):
     template_name = 'admin_panel.html'

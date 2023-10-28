@@ -6,7 +6,6 @@ from django.contrib.auth.models import User
 
 class Categorie(models.Model):
     title = models.CharField(max_length=200)
-    category_image = models.ImageField(null=True, blank=True, upload_to="media/images/")
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE
@@ -16,9 +15,21 @@ class Categorie(models.Model):
     def __str__(self):
         return self.title
 
+class Localizacao(models.Model):
+    title = models.CharField(max_length=200)
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE
+    )
+    creation_date = models.DateTimeField(auto_now_add=True)
+    categorie = models.ForeignKey(Categorie, on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        return self.title
+
 class Campo(models.Model):
     title = models.CharField(max_length=200)
-    localizacao = models.CharField(max_length=100)
+    location = models.ForeignKey(Localizacao, on_delete=models.CASCADE, null=True)
     content = models.TextField()
     categorie = models.ForeignKey(Categorie, blank=True, null=True, on_delete=models.CASCADE)
     author = models.ForeignKey(
