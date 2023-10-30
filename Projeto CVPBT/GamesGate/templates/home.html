@@ -6,7 +6,7 @@
 <div class="container mt-4">
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">Já conheces a nossa app?</h5>
+            <h5 class="card-title"><i class="bi bi-arrow-left-short"></i> Já conheces a nossa app?</h5>
             <p class="card-text">Instala já a nossa app!</p>
         </div>
     </div>
@@ -16,7 +16,7 @@
     <div class="card mx-auto" style="width: 30rem;">
         <div class="card-body">
             <div class="text-center">
-                <p>Que tipo de desporto queres reservar?:</p>
+                <p id="category-title"><i class="bi bi-arrow-left-short"></i> Que tipo de desporto queres reservar?:</p>
             </div>
 
             <ul class="list-group list-group-flush" id="categories-list">
@@ -47,6 +47,7 @@
 <script>
     const categoriesList = $("#categories-list");
     const localizacoesList = $("#localizacoes-list");
+    const categoryTitle = $("#category-title");
 
     // Function to load localizacoes for a category
     function loadLocalizacoes(categoryId) {
@@ -63,6 +64,7 @@
                         localizacoesList.append(localizacaoItem);
                     });
                     localizacoesList.show();
+                    categoryTitle.html('<i class="bi bi-arrow-left-short"></i> Escolhe a localizacao'); // Update the text
                 } else {
                     // Handle the case when no locations are found for the category
                     console.log("No locations found for the selected category.");
