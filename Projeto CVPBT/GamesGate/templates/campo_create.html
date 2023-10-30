@@ -1,10 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "nav.html" %}
 
-</body>
-</html>
+{% block title %}Campo Create{% endblock title %}
+
+{% extends "nav.html" %}
+
+{% block title %}Campo Create{% endblock title %}
+
+{% block content %}
+
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-9 mt-4">
+      <div class="shadow p-4 mb-5 bg-body rounded">
+        <h4 class="text-center">Adicionar um novo campo</h4>
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="form-group row">
+            <label for="{{ form.title.id_for_label }}" class="col-sm-2 col-form-label">{{ form.title.label }}</label>
+            <div class="col-sm-10">
+              {{ form.title }}
+            </div>
+          </div>
+            <br>
+          <div class="form-group">
+            {{ form.location.label_tag }}
+            {{ form.location }}
+          </div>
+            <br>
+          <div class="form-group">
+            {{ form.content.label_tag }}
+            {{ form.content }}
+          </div>
+            <br>
+          <div class="d-flex justify-content-center">
+            <button class="btn btn-success mx-2" type="submit">Create</button>
+            <a href="{% url 'list-categories' %}" class="btn btn-success">No, go back</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
+

@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.contrib.postgres.fields import ArrayField
 
 # Create your models here.
 
@@ -55,3 +56,16 @@ class Campo(models.Model):
             self.rating = 0
         self.save()
 
+class Reservation(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    campo = models.ForeignKey(Campo, on_delete=models.CASCADE)
+    date = models.DateField()
+    time = models.TimeField()
+
+class AvailableSlot(models.Model):
+    campo = models.ForeignKey(Campo, on_delete=models.CASCADE)
+    start_datetime = models.DateTimeField()
+    end_datetime = models.DateTimeField()
+
+    def __str__(self):
+        return f"Available Slot for {self.campo.title} - {self.start_datetime} to {self.end_datetime}"
