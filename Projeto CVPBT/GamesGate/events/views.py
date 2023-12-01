@@ -60,6 +60,14 @@ class CampoDetailView(DetailView):
 class AdminPanelView(TemplateView):
     template_name = 'admin_panel.html'
 
+class ContactosView(TemplateView):
+    template_name = 'contactos.html'
+
+class QuemSomosView(TemplateView):
+    template_name = 'quem_somos.html'
+
+class ParceriasView(TemplateView):
+    template_name = 'parcerias.html'
 
 def add_evaluation(request, campo_id, new_rating):
     # Retrieve the Campo instance

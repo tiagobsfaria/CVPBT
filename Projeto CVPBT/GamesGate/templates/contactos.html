@@ -1,0 +1,57 @@
+{% extends "nav.html" %}
+
+{% block content %}
+    {% load static %}
+
+<body>
+<div class="container text-center rounded" style="background-color: #e1f7ed;" >
+    <div class="row row-cols-1">
+        <div class="col fs-1 fw-bold">Contactos</div>
+    </div>
+  <div class="row row-cols-3">
+    <div class="col-4">
+        <div class="image-container">
+            <img src="{% static 'images/callcenter.png' %}" class="img-fluid" width="20%" height="20%" >
+        </div>
+        <br>
+        <div class="container">
+            <p class="fw-bold fs-3"> Chamada telefónica</p>
+            <p class="fw-bold fs-6"> Chamadas nacionais gratuitas </p>
+            <p class="fw-bold fs-6">Entre as 8:00 e as 18:00</p>
+            <p class="fw-bold fs-6">+351 987 654 321</p>
+            <p class="fw-bold fs-6">Fora do horário mencionado por favor contacte-nos por email obrigado.</p>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="image-container">
+            <img src="{% static 'images/midia-social.png' %}" class="img-fluid" width="20%" height="20%" >
+        </div>
+        <br>
+        <div class="container">
+            <p class="fw-bold fs-3"> Redes Sociais</p>
+            <p class="fw-bold fs-6"> Instagram </p>
+            <p class="fs-6">@gamesgate_2023</p>
+            <p class="fw-bold fs-6">Facebook</p>
+            <p class="fs-6">www.facebook.com\gamesgate</p>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="image-container">
+            <img src="{% static 'images/o-email.png' %}" class="img-fluid" width="20%" height="20%" >
+        </div>
+        <br>
+        <div class="container">
+            <p class="fw-bold fs-3"> Email</p>
+            <p class="fw-bold fs-6"> Apoio ao cliente </p>
+            <p class="fs-6">apoio.cliente@gamesgate.pt</p>
+            <p class="fw-bold fs-6">Parcerias</p>
+            <p class="fs-6">parcerias@gamesgate.pt</p>
+        </div>
+    </div>
+  </div>
+    <br>
+    <br>
+</div>
+
+</body>
+{% endblock content %}
