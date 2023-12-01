@@ -7,8 +7,8 @@
 <div class="container">
     <div class="row justify-content-center">
         <!-- Left Column - Form -->
-        <div class="col-lg-6 mt-4">
-            <div class="shadow p-4 mb-5 bg-body rounded">
+        <div class="shadow p-4 mb-5 bg-body rounded">
+            <div class="col-lg-6 mt-4">
                 <form action="" method="post">
                     {% csrf_token %}
                     <div class="form-group text-center">
@@ -27,11 +27,13 @@
                     </div>
                 </form>
             </div>
-        </div>
 
-        <!-- Right Column - Image -->
-        <div class="col-lg-6 mt-4">
-            <div class="image-container" style="background-image: url('images/imagemlogin.jpg'); height: 100%; background-size: cover;"></div>
+            <!-- Right Column - Image -->
+            <div class="col-lg-6 mt-4">
+                <div class="image-container">
+                    <img src="{% static 'images/imagemlogin.png' %}"  height="100%">
+                </div>
+            </div>
         </div>
     </div>
 </div>
