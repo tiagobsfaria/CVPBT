@@ -8,6 +8,7 @@ from django.http import JsonResponse
 
 from .models import Campo, Categorie, Localizacao
 from .forms import CampoForm
+from .utils import get_slots
 
 # Create your views here.
 
@@ -87,3 +88,21 @@ def add_evaluation(request, campo_id, new_rating):
     # Handle invalid rating values here
     else:
         return JsonResponse({'error': 'Invalid rating value'})
+
+def display_slots(request, campo_id, selected_date):
+    campo = Campo.objects.get(id=campo_id)
+    slots = get_slots(campo, selected_date)
+    return render(request, 'display_slots.html', {'campo': campo, 'selected_date': selected_date, 'slots': slots})
+
+def search_campos(request):
+    # Retrieve search criteria from the request
+    category_id = request.GET.get('category_id')
+    localizacao_id = request.GET.get('localizacao_id')
+    date = request.GET.get('date')
+
+    # Perform a query to get matching Campos based on the search criteria
+    # (Replace this with your actual query based on your data model)
+    matching_campos = Campo.objects.filter(category__id=category_id, location__id=localizacao_id).all()
+
+    # Render a template or generate HTML to represent the matching Campos
+    return render(request, 'search_results.html', {'matching_campos': matching_campos})

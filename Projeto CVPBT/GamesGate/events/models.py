@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
 
+
 class Categorie(models.Model):
     title = models.CharField(max_length=200)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -9,6 +10,7 @@ class Categorie(models.Model):
 
     def __str__(self):
         return self.title
+
 
 class Localizacao(models.Model):
     title = models.CharField(max_length=200)
@@ -18,6 +20,7 @@ class Localizacao(models.Model):
 
     def __str__(self):
         return self.title
+
 
 class Campo(models.Model):
     title = models.CharField(max_length=200)
@@ -30,8 +33,7 @@ class Campo(models.Model):
     rating = models.PositiveSmallIntegerField(default=0)
     total_rating = models.PositiveIntegerField(default=0)
     num_evaluations = models.PositiveIntegerField(default=0)
-
-    monday_opening= models.TimeField(null=True)
+    monday_opening = models.TimeField(null=True)
     monday_closing = models.TimeField(null=True)
     tuesday_opening = models.TimeField(null=True)
     tuesday_closing = models.TimeField(null=True)
@@ -45,7 +47,6 @@ class Campo(models.Model):
     saturday_closing = models.TimeField(null=True)
     sunday_opening = models.TimeField(null=True)
     sunday_closing = models.TimeField(null=True)
-
     closed_days = models.DateField(null=True)
 
     def __str__(self):
@@ -60,3 +61,20 @@ class Campo(models.Model):
         else:
             self.rating = 0
         self.save()
+
+    def get_opening_time_field(self, day_of_week):
+        return f"{self.get_day_of_week_name(day_of_week)}_opening"
+
+    def get_closing_time_field(self, day_of_week):
+        f"{self.get_day_of_week_name(day_of_week)}_closing"
+
+    def get_day_of_week_name(self, day_of_week):
+        days_of_week = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+        return days_of_week[day_of_week]
+
+
+class Reserva(models.Model):
+    campo = models.ForeignKey(Campo, on_delete=models.CASCADE)
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)

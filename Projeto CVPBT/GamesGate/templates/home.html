@@ -43,10 +43,19 @@
             <div class="mt-3" id="datepicker-container" style="display: none;">
                 <label for="datepicker">Escolha uma data:</label>
                 <input type="text" class="form-control" id="datepicker" placeholder="Clique para escolher uma data">
+                <br>
+                <a class="btn btn-primary text-white" id="search-button"> Procurar</a>
             </div>
         </div>
     </div>
 </div>
+
+    <div id="search-results-container">
+        {% for campo in matching_campos %}
+            <h3>{{ campo.title }}</h3>
+        <!-- Add other fields you want to display for each Campo -->
+        {% endfor %}
+    </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
@@ -58,6 +67,8 @@
     const categoryTitle = $("#category-title");
     const datepickerContainer = $("#datepicker-container");
     const datepickerInput = $("#datepicker");
+    const searchButton = $("#search-button");
+    const searchResultsContainer = $("#search-results-container");
 
     // Function to load localizacoes for a category
     function loadLocalizacoes(categoryId) {
@@ -143,6 +154,36 @@
         autoclose: true,
         todayHighlight: true
     });
+
+     searchButton.on("click", function (e) {
+        e.preventDefault();
+
+        // Retrieve selected category, localizacao, and date
+        const selectedCategoryId = categoryId; /*MUDAR AQUI*/
+        const selectedLocalizacaoId = localizacaoId;
+        const selectedDate = datepickerInput.datepicker("getDate");
+
+        // Make an AJAX request to fetch Campos based on the search criteria
+        $.ajax({
+            url: "/search_campos/",
+            method: "GET",
+            data: {
+                category_id: selectedCategoryId,
+                localizacao_id: selectedLocalizacaoId,
+                date: selectedDate.toISOString()  // Convert date to ISO format
+            },
+            success: function (data) {
+                // Update the search results container with the fetched Campos
+                searchResultsContainer.html(data);
+                datepickerContainer.hide();
+                searchResultsContainer.show();
+            },
+            error: function () {
+                console.log("Error fetching Campos from the server.");
+            }
+        });
+    });
+
 
 </script>
 
