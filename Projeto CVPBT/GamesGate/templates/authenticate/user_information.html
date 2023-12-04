@@ -2,28 +2,42 @@
 {% block title %}User Info{% endblock title %}
 {% block content %}
 
-    <div class="container">
-        <h3 class="text-center">User Info</h3>
+{% load static %}
 
-        <div class="row justify-content-center mt-4">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="text-center mb-4">
-                            {% if user.account.profile_image.url %}
-                                <img src="{{ user.account.profile_image.url }}" class="img-fluid" width="150" height="150" alt="Profile Picture">
-                            {% endif %}
-                        </div>
-                        <p><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
-                        <p><strong>Username:</strong> {{ user.username }}</p>
-                        <p><strong>Email:</strong> {{ user.email }}</p>
-                    </div>
-                    <div class="card-footer text-center">
-                        <a href="{% url 'edit_user' %}" class="btn btn-success">Edit Profile</a>
-                    </div>
-                </div>
+<div class="container text-center rounded" style="background-color: #e1f7ed;">
+    <div class="row row-cols-1">
+        <div class="col fs-1 fw-bold">Meu Perfil</div>
+    </div>
+    <div class="row row-cols-2">
+        <div class="col-3">
+            <div class="image-container">
+                {% if user.account.profile_image.url %}
+                    <img src="{{ user.account.profile_image.url }}" class="img-fluid" width="150" height="150" alt="Profile Picture">
+                {% else %}
+                    <img src="{% static 'images/homem.png' %}" class="img-fluid" width="40%" height="40%">
+                {% endif %}
+            </div>
+            <br>
+            <div class="container">
+                <a href="{% url 'edit_user' %}" class="btn btn-primary text-white">Editar Perfil</a>
+                <br>
+                <br>
+                <p class="fs-6"> Jogos Jogados: </p>
+                <p class="fs-6"> Nome: {{ user.first_name }} {{ user.last_name }}</p>
+                <p class="fs-6"> Username: {{ user.username }}</p>
+                <p class="fs-6"> Email: {{ user.email }}</p>
+            </div>
+        </div>
+        <div class="col-9">
+            <div class="container">
+                <p class="fw-bold fs-3"> Últimas reservas </p>
+            </div>
+            <br>
+            <div class="image-container">
+
             </div>
         </div>
     </div>
+</div>
 
 {% endblock content %}
