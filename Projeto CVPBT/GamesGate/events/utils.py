@@ -1,5 +1,6 @@
 # utils.py
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
+
 
 def get_slots(campo, selected_date):
     day_of_week = selected_date.weekday()
@@ -11,8 +12,9 @@ def get_slots(campo, selected_date):
     if opening_time_field is None or closing_time_field is None:
         return []  # Return an empty list if opening or closing time is not set for the selected day
 
-    opening_time = getattr(campo, opening_time_field)
-    closing_time = getattr(campo, closing_time_field)
+    opening_time = getattr(campo, opening_time_field).time()
+    closing_time = getattr(campo, closing_time_field).time()
+
 
     # Calculate available slots
     slot_duration = timedelta(hours=1)
@@ -21,7 +23,10 @@ def get_slots(campo, selected_date):
 
     slots = []
     while current_time + slot_duration <= end_time:
-        slots.append(current_time)
+        slots.append({
+            'start_time': current_time.time().strftime('%H:%M'),  # Format time as string
+            'end_time': (current_time + slot_duration).time().strftime('%H:%M'),
+        })
         current_time += slot_duration
 
     return slots

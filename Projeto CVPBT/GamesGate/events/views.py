@@ -5,6 +5,7 @@ from django.views.generic.edit import UpdateView, DeleteView, CreateView
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
+from datetime import datetime
 
 from .models import Campo, Categorie, Localizacao
 from .forms import CampoForm
@@ -100,9 +101,22 @@ def search_campos(request):
     localizacao_id = request.GET.get('localizacao_id')
     date = request.GET.get('date')
 
+    selected_date = datetime.strptime(date, "%Y-%m-%dT%H:%M:%S.%fZ").date()
+
     # Perform a query to get matching Campos based on the search criteria
     # (Replace this with your actual query based on your data model)
-    matching_campos = Campo.objects.filter(category__id=category_id, location__id=localizacao_id).all()
+    matching_campos = Campo.objects.filter(categorie__id=category_id, location__id=localizacao_id).exclude(closed_days=selected_date).all()
 
-    # Render a template or generate HTML to represent the matching Campos
-    return render(request, 'search_results.html', {'matching_campos': matching_campos})
+    campos_data = []
+
+    for campo in matching_campos:
+        # Get slots for the current Campo and date
+        slots = get_slots(campo, selected_date)
+
+        # Append Campo information along with available slots to the campos_data list
+        campos_data.append({
+            'title': campo.title,
+            'slots': slots,
+        })
+
+    return JsonResponse({'matching_campos': campos_data})

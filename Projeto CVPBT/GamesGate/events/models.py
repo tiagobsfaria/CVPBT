@@ -29,7 +29,7 @@ class Campo(models.Model):
     categorie = models.ForeignKey(Categorie, blank=True, null=True, on_delete=models.CASCADE)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     added_date = models.DateTimeField(auto_now_add=True)
-    likes = models.ManyToManyField(User, related_name="campo_liked")
+    likes = models.ManyToManyField(User, related_name="campo_liked", null=True)
     rating = models.PositiveSmallIntegerField(default=0)
     total_rating = models.PositiveIntegerField(default=0)
     num_evaluations = models.PositiveIntegerField(default=0)
@@ -71,6 +71,9 @@ class Campo(models.Model):
     def get_day_of_week_name(self, day_of_week):
         days_of_week = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
         return days_of_week[day_of_week]
+
+    def get_closing_days(self):
+        return self.closed_days
 
 
 class Reserva(models.Model):

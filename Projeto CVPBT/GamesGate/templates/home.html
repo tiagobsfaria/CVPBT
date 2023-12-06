@@ -12,7 +12,7 @@
     </div>
 </div>
 
-<div class="container mt-5">
+<div class="container mt-5" id="tabela">
     <div class="card mx-auto" style="width: 30rem; background-color: #e1f7ed;">
         <div class="card-body">
             <div class="text-center">
@@ -46,16 +46,14 @@
                 <br>
                 <a class="btn btn-primary text-white" id="search-button"> Procurar</a>
             </div>
+
+            <div id="search-results-container" style="display: none;">
+
+            </div>
         </div>
     </div>
 </div>
 
-    <div id="search-results-container">
-        {% for campo in matching_campos %}
-            <h3>{{ campo.title }}</h3>
-        <!-- Add other fields you want to display for each Campo -->
-        {% endfor %}
-    </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
@@ -69,6 +67,10 @@
     const datepickerInput = $("#datepicker");
     const searchButton = $("#search-button");
     const searchResultsContainer = $("#search-results-container");
+
+    let categoryId;
+    let localizacaoId;
+
 
     // Function to load localizacoes for a category
     function loadLocalizacoes(categoryId) {
@@ -122,7 +124,8 @@
                         + '<path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/> </svg>'
                         + '<i class="bi bi-arrow-left"></i></a> Escolhe a data pretendida');
          datepickerContainer.show();
-        const localizacaoId = $(this).data("localizacao");
+        localizacaoId = $(this).data("localizacao");
+
         // Perform actions related to localizacao click, e.g., show date picker
         console.log("Localizacao clicked:", localizacaoId);
     });
@@ -130,7 +133,7 @@
     // Handle category item clicks
     categoriesList.on("click", ".category-item", function (e) {
         e.preventDefault();
-        const categoryId = $(this).data("category");
+        categoryId = $(this).data("category");
         loadLocalizacoes(categoryId);
     });
 
@@ -146,6 +149,7 @@
     categoryTitle.on("click", ".bi-arrow-left", function (e) {
         e.preventDefault();
         loadCategories();
+        searchResultsContainer.hide();
     });
 
     // Initialize the date picker
@@ -163,6 +167,7 @@
         const selectedLocalizacaoId = localizacaoId;
         const selectedDate = datepickerInput.datepicker("getDate");
 
+
         // Make an AJAX request to fetch Campos based on the search criteria
         $.ajax({
             url: "/search_campos/",
@@ -174,9 +179,31 @@
             },
             success: function (data) {
                 // Update the search results container with the fetched Campos
-                searchResultsContainer.html(data);
                 datepickerContainer.hide();
+
+                const camposData = data.matching_campos;
+
+                let htmlContent = '';
+                camposData.forEach(function(campo) {
+                    htmlContent += `<h3>${campo.title}</h3>`;
+
+                    // Check if slots are available
+                    if (campo.slots.length > 0) {
+                        htmlContent += '<p>Available Slots:</p>';
+                        htmlContent += '<ul>';
+                        campo.slots.forEach(function(slot) {
+                            htmlContent += `<li>${slot.start_time} - ${slot.end_time}</li>`;
+                        });
+                        htmlContent += '</ul>';
+                    } else {
+                        htmlContent += '<p>No available slots for the selected date.</p>';
+                    }
+                    // Add other fields you want to display for each Campo
+                });
+
+                console.log(camposData)
                 searchResultsContainer.show();
+                searchResultsContainer.html(htmlContent);
             },
             error: function () {
                 console.log("Error fetching Campos from the server.");

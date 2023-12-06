@@ -8,6 +8,7 @@ from .views import (
         ContactosView,
         QuemSomosView,
         ParceriasView,
+        search_campos,
     )
 urlpatterns = [
     path("", home, name="home"),
@@ -18,5 +19,6 @@ urlpatterns = [
     path("contactos", ContactosView.as_view(), name='contactos'),
     path("quemsomos",  QuemSomosView.as_view(), name='quemsomos'),
     path("parcerias",  ParceriasView.as_view(), name='parcerias'),
+    path("search_campos/", search_campos, name='search_campos'),
 
 ]
