@@ -33,21 +33,22 @@ class Campo(models.Model):
     rating = models.PositiveSmallIntegerField(default=0)
     total_rating = models.PositiveIntegerField(default=0)
     num_evaluations = models.PositiveIntegerField(default=0)
-    monday_opening = models.TimeField(null=True)
-    monday_closing = models.TimeField(null=True)
-    tuesday_opening = models.TimeField(null=True)
-    tuesday_closing = models.TimeField(null=True)
-    wednesday_opening = models.TimeField(null=True)
-    wednesday_closing = models.TimeField(null=True)
-    thursday_opening = models.TimeField(null=True)
-    thursday_closing = models.TimeField(null=True)
-    friday_opening = models.TimeField(null=True)
-    friday_closing = models.TimeField(null=True)
-    saturday_opening = models.TimeField(null=True)
-    saturday_closing = models.TimeField(null=True)
-    sunday_opening = models.TimeField(null=True)
-    sunday_closing = models.TimeField(null=True)
+    Monday_opening = models.TimeField(null=True)
+    Monday_closing = models.TimeField(null=True)
+    Tuesday_opening = models.TimeField(null=True)
+    Tuesday_closing = models.TimeField(null=True)
+    Wednesday_opening = models.TimeField(null=True)
+    Wednesday_closing = models.TimeField(null=True)
+    Thursday_opening = models.TimeField(null=True)
+    Thursday_closing = models.TimeField(null=True)
+    Friday_opening = models.TimeField(null=True)
+    Friday_closing = models.TimeField(null=True)
+    Saturday_opening = models.TimeField(null=True)
+    Saturday_closing = models.TimeField(null=True)
+    Sunday_opening = models.TimeField(null=True)
+    Sunday_closing = models.TimeField(null=True)
     closed_days = models.DateField(null=True)
+    image = models.ImageField(null=True, upload_to="static/images")
 
     def __str__(self):
         return self.title
@@ -63,14 +64,10 @@ class Campo(models.Model):
         self.save()
 
     def get_opening_time_field(self, day_of_week):
-        return f"{self.get_day_of_week_name(day_of_week)}_opening"
+        return getattr(self, f"{day_of_week}_opening", None)
 
     def get_closing_time_field(self, day_of_week):
-        f"{self.get_day_of_week_name(day_of_week)}_closing"
-
-    def get_day_of_week_name(self, day_of_week):
-        days_of_week = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
-        return days_of_week[day_of_week]
+       return getattr(self, f"{day_of_week}_closing", None)
 
     def get_closing_days(self):
         return self.closed_days

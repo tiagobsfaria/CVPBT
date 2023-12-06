@@ -181,26 +181,48 @@
                 // Update the search results container with the fetched Campos
                 datepickerContainer.hide();
 
-                const camposData = data.matching_campos;
+    const camposData = data.matching_campos;
 
-                let htmlContent = '';
-                camposData.forEach(function(campo) {
-                    htmlContent += `<h3>${campo.title}</h3>`;
+    let htmlContent = '';
+    camposData.forEach(function (campo) {
+        htmlContent += `<div class="container text-center rounded my-4" style="background-color: #e1f7ed;">`;
+        htmlContent += '<div class="row row-cols-2 no-gutters justify-content-center">';
 
-                    // Check if slots are available
-                    if (campo.slots.length > 0) {
-                        htmlContent += '<p>Available Slots:</p>';
-                        htmlContent += '<ul>';
-                        campo.slots.forEach(function(slot) {
-                            htmlContent += `<li>${slot.start_time} - ${slot.end_time}</li>`;
-                        });
-                        htmlContent += '</ul>';
-                    } else {
-                        htmlContent += '<p>No available slots for the selected date.</p>';
-                    }
-                    // Add other fields you want to display for each Campo
-                });
+        // Left column with image
+        htmlContent += '<div class="col-6 p-0">';
+        htmlContent += '<div class="image-container">';
+        // Replace the image source with the actual path or URL
+        htmlContent += `<img src="${campo.image}" class="img-fluid rounded" width="100%" height="60%">`;
+        htmlContent += '</div>';
+        htmlContent += '</div>';
 
+        // Right column with Campo information
+        htmlContent += '<div class="col-6 p-0">';
+        htmlContent += '<div class="container mx-auto">';
+        htmlContent += `<h3>${campo.title}</h3>`;
+        htmlContent += '<p>Horários disponíveis:</p>';
+
+        // Check if slots are available
+        if (campo.slots.length > 0) {
+            htmlContent += '<div class="btn-group" role="group" aria-label="Slots">';
+            campo.slots.forEach(function (slot) {
+                htmlContent += `
+                    <button type="button" class="btn btn-primary slot-button" data-toggle="modal" data-target="#slotModal">
+                        ${slot.start_time}
+                    </button>`;
+            });
+            htmlContent += '</div>';
+        } else {
+            htmlContent += '<p>No available slots for the selected date.</p>';
+        }
+
+        htmlContent += '</div>';
+        htmlContent += '</div>';
+
+        htmlContent += '</div>';  // Close the row
+        htmlContent += `</div>`;
+        // Add other fields you want to display for each Campo
+    });
                 console.log(camposData)
                 searchResultsContainer.show();
                 searchResultsContainer.html(htmlContent);

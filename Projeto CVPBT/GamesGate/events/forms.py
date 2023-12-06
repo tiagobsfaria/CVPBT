@@ -46,7 +46,7 @@ class CampoForm(forms.ModelForm):
                   'monday_opening', 'monday_closing', 'tuesday_opening', 'tuesday_closing',
                   'wednesday_opening', 'wednesday_closing', 'thursday_opening', 'thursday_closing',
                   'friday_opening', 'friday_closing', 'saturday_opening', 'saturday_closing',
-                  'sunday_opening', 'sunday_closing', 'closed_days']
+                  'sunday_opening', 'sunday_closing', 'closed_days', 'image']
 
     title = forms.CharField(max_length=200)
     location = forms.ModelChoiceField(queryset=Localizacao.objects.all())
@@ -71,3 +71,4 @@ class CampoForm(forms.ModelForm):
     sunday_opening = forms.TimeField()
     sunday_closing = forms.TimeField()
     closed_days = forms.DateField()
+    image = forms.ClearableFileInput(attrs={'multiple': False})

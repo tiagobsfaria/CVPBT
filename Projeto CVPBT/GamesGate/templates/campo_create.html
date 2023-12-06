@@ -19,6 +19,13 @@
             </div>
           </div>
 
+            <div class="form-group row">
+            <label for="{{ form.image.id_for_label }}" class="col-sm-2 col-form-label">{{ form.image.label }}</label>
+            <div class="col-sm-10">
+              {{ form.image }}
+            </div>
+          </div>
+
           <div class="form-group row">
             <label for="{{ form.categorie.id_for_label }}" class="col-sm-2 col-form-label">{{ form.categorie.label_tag }}</label>
             <div class="col-sm-10">
@@ -67,6 +74,7 @@
               {{ form.tuesday_closing }}
             </div>
           </div>
+
 
           <div class="form-group row">
             <label for="{{ form.closed_days.id_for_label }}" class="col-sm-2 col-form-label">{{ form.closed_days.label_tag }}</label>
