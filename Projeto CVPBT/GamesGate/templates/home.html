@@ -3,6 +3,8 @@
 {% block title %}Home{% endblock title %}
 
 {% block content %}
+    {% load static %}
+
 <div class="container mt-4">
     <div class="card">
         <div class="card-body">
@@ -185,14 +187,15 @@
 
     let htmlContent = '';
     camposData.forEach(function (campo) {
-        htmlContent += `<div class="container text-center rounded my-4" style="background-color: #e1f7ed;">`;
-        htmlContent += '<div class="row row-cols-2 no-gutters justify-content-center">';
+        htmlContent += `<div class="container text-center rounded my-4" ">`;
+        htmlContent += '<div class="row no-gutters justify-content-center">'; // Remove row-cols-2 class
 
         // Left column with image
         htmlContent += '<div class="col-6 p-0">';
         htmlContent += '<div class="image-container">';
         // Replace the image source with the actual path or URL
-        htmlContent += `<img src="${campo.image}" class="img-fluid rounded" width="100%" height="60%">`;
+        console.log("Imagem na home.html", campo.image)
+        htmlContent += `<img src="${campo.image.url}" class="img-fluid rounded" width="100%" height="60%">`;
         htmlContent += '</div>';
         htmlContent += '</div>';
 
@@ -200,28 +203,39 @@
         htmlContent += '<div class="col-6 p-0">';
         htmlContent += '<div class="container mx-auto">';
         htmlContent += `<h3>${campo.title}</h3>`;
+        htmlContent += '<p>Preço por Hora:</p>';
+        htmlContent += `<p>${campo.preco_hora} €</p>`;
         htmlContent += '<p>Horários disponíveis:</p>';
 
         // Check if slots are available
         if (campo.slots.length > 0) {
+            let slotsCounter = 0;
             htmlContent += '<div class="btn-group" role="group" aria-label="Slots">';
-            campo.slots.forEach(function (slot) {
+
+            campo.slots.forEach(function (slot, index) {
+                // Check if 5 slots have already been displayed in the current row
+                if (slotsCounter > 0 && slotsCounter % 5 === 0) {
+                    // Close the current btn-group div and start a new one
+                    htmlContent += '</div>';
+                    htmlContent += '<div class="btn-group mt-2" role="group" aria-label="Slots">';
+                }
+
                 htmlContent += `
-                    <button type="button" class="btn btn-primary slot-button" data-toggle="modal" data-target="#slotModal">
+                    <button type="button" class="btn btn-primary slot-button" data-toggle="modal" data-target="#slotModal" style="margin-right: 8px;">
                         ${slot.start_time}
                     </button>`;
+
+                slotsCounter++;
             });
-            htmlContent += '</div>';
+
+            htmlContent += '</div>'; // Close the last btn-group div
         } else {
             htmlContent += '<p>No available slots for the selected date.</p>';
         }
 
         htmlContent += '</div>';
         htmlContent += '</div>';
-
-        htmlContent += '</div>';  // Close the row
-        htmlContent += `</div>`;
-        // Add other fields you want to display for each Campo
+        htmlContent += '</div>';
     });
                 console.log(camposData)
                 searchResultsContainer.show();

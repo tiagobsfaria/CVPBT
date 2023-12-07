@@ -113,9 +113,13 @@ def search_campos(request):
         # Get slots for the current Campo and date
         slots = get_slots(campo, selected_date)
 
+        print(f"Imagem: {campo.image.url}")
+
         # Append Campo information along with available slots to the campos_data list
         campos_data.append({
             'title': campo.title,
+            'image': campo.image.url,
+            'preco_hora': campo.preco_hora,
             'slots': slots,
         })
 

@@ -46,11 +46,12 @@ class CampoForm(forms.ModelForm):
                   'monday_opening', 'monday_closing', 'tuesday_opening', 'tuesday_closing',
                   'wednesday_opening', 'wednesday_closing', 'thursday_opening', 'thursday_closing',
                   'friday_opening', 'friday_closing', 'saturday_opening', 'saturday_closing',
-                  'sunday_opening', 'sunday_closing', 'closed_days', 'image']
+                  'sunday_opening', 'sunday_closing', 'closed_days', 'image', 'preco_hora']
 
     title = forms.CharField(max_length=200)
     location = forms.ModelChoiceField(queryset=Localizacao.objects.all())
     content = forms.Textarea()
+    preco_hora = forms.IntegerField()
     categorie = forms.ModelChoiceField(queryset=Categorie.objects.all())
     author = forms.ModelChoiceField(queryset=User.objects.all())
     likes = forms.ModelMultipleChoiceField(queryset=User.objects.all())
@@ -72,3 +73,14 @@ class CampoForm(forms.ModelForm):
     sunday_closing = forms.TimeField()
     closed_days = forms.DateField()
     image = forms.ClearableFileInput(attrs={'multiple': False})
+
+    def clean_image(self):
+        image = self.cleaned_data.get('image', False)
+
+        # Check if an image is provided
+        if not image:
+            # If no image is provided, you can set a default image path or URL
+            default_image_path = '/images/campo_default.jpeg'
+            return default_image_path
+
+        return image

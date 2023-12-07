@@ -48,7 +48,8 @@ class Campo(models.Model):
     Sunday_opening = models.TimeField(null=True)
     Sunday_closing = models.TimeField(null=True)
     closed_days = models.DateField(null=True)
-    image = models.ImageField(null=True, upload_to="static/images")
+    image = models.ImageField(null=True, upload_to="")
+    preco_hora = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.title
@@ -67,7 +68,7 @@ class Campo(models.Model):
         return getattr(self, f"{day_of_week}_opening", None)
 
     def get_closing_time_field(self, day_of_week):
-       return getattr(self, f"{day_of_week}_closing", None)
+        return getattr(self, f"{day_of_week}_closing", None)
 
     def get_closing_days(self):
         return self.closed_days
