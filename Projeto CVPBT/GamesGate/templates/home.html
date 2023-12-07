@@ -15,7 +15,7 @@
 </div>
 
 <div class="container mt-5" id="tabela">
-    <div class="card mx-auto" style="width: 30rem; background-color: #e1f7ed;">
+    <div class="card mx-auto" style="width: 50rem; background-color: #e1f7ed;">
         <div class="card-body">
             <div class="text-center">
                 <p id="category-title"> Que tipo de desporto queres reservar?:</p>
@@ -187,7 +187,7 @@
 
     let htmlContent = '';
     camposData.forEach(function (campo) {
-        htmlContent += `<div class="container text-center rounded my-4" ">`;
+        htmlContent += `<div class="container text-center rounded my-4" style="background-color: #e1f7ed;">`;
         htmlContent += '<div class="row no-gutters justify-content-center">'; // Remove row-cols-2 class
 
         // Left column with image
@@ -203,32 +203,23 @@
         htmlContent += '<div class="col-6 p-0">';
         htmlContent += '<div class="container mx-auto">';
         htmlContent += `<h3>${campo.title}</h3>`;
-        htmlContent += '<p>Preço por Hora:</p>';
-        htmlContent += `<p>${campo.preco_hora} €</p>`;
+        htmlContent += `<p>Preço por hora: ${campo.preco_hora} €</p>`;
         htmlContent += '<p>Horários disponíveis:</p>';
 
         // Check if slots are available
         if (campo.slots.length > 0) {
-            let slotsCounter = 0;
-            htmlContent += '<div class="btn-group" role="group" aria-label="Slots">';
+            htmlContent += '<div class="btn-group row">'; // Add the "row" class
 
             campo.slots.forEach(function (slot, index) {
-                // Check if 5 slots have already been displayed in the current row
-                if (slotsCounter > 0 && slotsCounter % 5 === 0) {
-                    // Close the current btn-group div and start a new one
-                    htmlContent += '</div>';
-                    htmlContent += '<div class="btn-group mt-2" role="group" aria-label="Slots">';
-                }
-
                 htmlContent += `
-                    <button type="button" class="btn btn-primary slot-button" data-toggle="modal" data-target="#slotModal" style="margin-right: 8px;">
-                        ${slot.start_time}
-                    </button>`;
-
-                slotsCounter++;
+                    <div class="col-2 mb-2"> <!-- Adjust the "col-2" class and "mb-2" class according to your preference -->
+                        <button type="button" class="btn btn-primary slot-button mr-2" data-toggle="modal" data-target="#slotModal">
+                            ${slot.start_time}
+                        </button>
+                    </div>`;
             });
 
-            htmlContent += '</div>'; // Close the last btn-group div
+            htmlContent += '</div>'; // Close the btn-group div
         } else {
             htmlContent += '<p>No available slots for the selected date.</p>';
         }
