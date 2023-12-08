@@ -53,7 +53,7 @@
 
             </div>
             <div id="reservation-confirmation-container" style="display: none;">
-                <p>Ola</p>
+
             </div>
         </div>
     </div>
@@ -73,6 +73,7 @@
     const searchButton = $("#search-button");
     const searchResultsContainer = $("#search-results-container");
     const slotButton = $("#slot-button");
+    const reservarButton = $("#reservar-button");
     const reservationConfirmationContainer = $("#reservation-confirmation-container");
 
     let categoryId;
@@ -164,7 +165,8 @@
     datepickerInput.datepicker({
         format: 'dd-mm-yyyy',  // Adjust the format as needed
         autoclose: true,
-        todayHighlight: true
+        todayHighlight: true,
+        startDate: new Date()
     });
 
      searchButton.on("click", function (e) {
@@ -223,9 +225,9 @@
                                             data-campo-title="${campo.title}"
                                             data-campo-image="${campo.image}"
                                             data-campo-price="${campo.preco_hora}"
+                                            data-date="${selectedDate}"
                                             data-slot-start-time="${slot.start_time}"
                                             data-slot-end-time="${slot.end_time}"
-                                            data-date="${selectedDate.toISOString()}"
                                             data-toggle="modal"
                                             data-target="#slotModal">
                                         ${slot.start_time}
@@ -290,6 +292,7 @@
                     htmlContent += '<div class="container mx-auto">';
                     htmlContent += `<h3>${campo_title}</h3>`;
                     htmlContent += `<p>Preço por hora: ${campo_preco} €</p>`;
+                    htmlContent += `<p>Data escolhida: ${data}</p>`;
                     htmlContent += `<p>Horário escolhido: ${startTime} - ${endTime}</p>`;
 
 
@@ -302,9 +305,11 @@
                     htmlContent += '</div>';
 
                     reservationConfirmationContainer.html(htmlContent);
-});
+    });
 
-
+    $(document).on("click", "#reservar-button", function (e) {
+        console.log("RESERVARRRRR")
+    });
 
 </script>
 
