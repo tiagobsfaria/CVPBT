@@ -78,4 +78,5 @@ class Reserva(models.Model):
     campo = models.ForeignKey(Campo, on_delete=models.CASCADE)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
+    date = models.DateField(null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
