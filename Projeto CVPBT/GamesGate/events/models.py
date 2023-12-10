@@ -48,7 +48,7 @@ class Campo(models.Model):
     Sunday_opening = models.TimeField(null=True)
     Sunday_closing = models.TimeField(null=True)
     closed_days = models.DateField(null=True)
-    image = models.ImageField(null=True, upload_to="")
+    image = models.ImageField(null=True, upload_to="images/")
     preco_hora = models.PositiveIntegerField(default=0)
 
     def __str__(self):
@@ -76,7 +76,10 @@ class Campo(models.Model):
 
 class Reserva(models.Model):
     campo = models.ForeignKey(Campo, on_delete=models.CASCADE)
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
-    date = models.DateField(null=True)
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    date = models.DateTimeField(null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Reserva {self.id} - {self.campo.title} - {self.start_time} to {self.end_time}"

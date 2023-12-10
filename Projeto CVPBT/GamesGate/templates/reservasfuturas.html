@@ -1,0 +1,22 @@
+{% extends "nav.html" %}
+
+{% block content %}
+    {% load static %}
+    <div class="container mt-4">
+        <h2>Your Reservations</h2>
+        {% if user_reservas %}
+            <ul>
+                {% for reserva in user_reservas %}
+                    <li>
+                        <p>Campo: {{ reserva.campo.title }}</p>
+                        <p>Date: {{ reserva.date }}</p>
+                        <p>Date: {{ reserva.date|date:"Y-m-d" }}</p>
+                        <p>Time: {{ reserva.start_time }} - {{ reserva.end_time }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>You have no reservations.</p>
+        {% endif %}
+    </div>
+{% endblock content %}

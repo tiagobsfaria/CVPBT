@@ -65,6 +65,36 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
 
 <script>
+
+    const csrftoken = getCookie('csrftoken');
+
+    $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+
+    function csrfSafeMethod(method) {
+        return /^(GET|HEAD|OPTIONS|TRACE)$/.test(method);
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
     const categoriesList = $("#categories-list");
     const localizacoesList = $("#localizacoes-list");
     const categoryTitle = $("#category-title");
@@ -103,6 +133,7 @@
                         + '<path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/> </svg>'
                         + '<i class="bi bi-arrow-left"></i></a> Escolhe a localizacao pretendida');
                     datepickerContainer.hide();  // Hide the date picker input
+                    reservationConfirmationContainer.hide();
 
                 } else {
                     localizacoesList.show();
@@ -112,6 +143,7 @@
                         + '<path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/> </svg>'
                         + '<i class="bi bi-arrow-left"></i></a> Voltar para as categorias');
                     datepickerContainer.hide();  // Hide the date picker input
+                    reservationConfirmationContainer.hide();
                 }
 
                 // Hide the categories list
@@ -133,6 +165,7 @@
                         + '<path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/> </svg>'
                         + '<i class="bi bi-arrow-left"></i></a> Escolhe a data pretendida');
          datepickerContainer.show();
+         reservationConfirmationContainer.hide();
         localizacaoId = $(this).data("localizacao");
 
         // Perform actions related to localizacao click, e.g., show date picker
@@ -152,6 +185,7 @@
         categoryTitle.html('<p id="category-title"> Que tipo de desporto queres reservar?:</p>');
         // Hide the date picker input when going back to categories
         datepickerContainer.hide();
+        reservationConfirmationContainer.hide();
     }
 
     // Add a click event handler for the back icon
@@ -176,6 +210,8 @@
         const selectedCategoryId = categoryId;
         const selectedLocalizacaoId = localizacaoId;
         const selectedDate = datepickerInput.datepicker("getDate");
+
+        console.log(selectedDate)
 
 
         // Make an AJAX request to fetch Campos based on the search criteria
@@ -221,11 +257,11 @@
                         campo.slots.forEach(function (slot, index) {
                             htmlContent += `
                                 <div class="col-2 mb-2">
-                                    <button type="button" class="btn btn-primary" id="slot-button"
+                                    <button type="button" class="btn btn-primary " style="margin-right: 50px;" id="slot-button"
                                             data-campo-title="${campo.title}"
                                             data-campo-image="${campo.image}"
                                             data-campo-price="${campo.preco_hora}"
-                                            data-date="${selectedDate}"
+                                            data-date="${selectedDate.toLocaleDateString("en-GB")}"
                                             data-slot-start-time="${slot.start_time}"
                                             data-slot-end-time="${slot.end_time}"
                                             data-toggle="modal"
@@ -263,6 +299,7 @@
                         + '<i class="bi bi-arrow-left"></i></a> Confirma a tua reserva');
             searchResultsContainer.hide();
             reservationConfirmationContainer.show();
+
             const startTime = $(this).data("slot-start-time");
             const endTime = $(this).data("slot-end-time");
             const campo_title = $(this).data("campo-title");
@@ -294,6 +331,19 @@
                     htmlContent += `<p>Preço por hora: ${campo_preco} €</p>`;
                     htmlContent += `<p>Data escolhida: ${data}</p>`;
                     htmlContent += `<p>Horário escolhido: ${startTime} - ${endTime}</p>`;
+                    {% if user.is_authenticated %}
+                        htmlContent += `
+                                        <button type="button" class="btn btn-primary" id="reservar-button"
+                                                data-campo-title="${campo_title}"
+                                                data-date="${data}"
+                                                data-slot-start-time="${startTime}"
+                                                data-slot-end-time="${endTime}"
+                                                data-toggle="modal"
+                                                data-target="#slotModal">
+                                            Reservar
+                                        </button>
+                                    </div>`;
+                    {% endif %}
 
 
                     htmlContent += '</div>';
@@ -301,15 +351,57 @@
                     htmlContent += '</div>';
 
                     htmlContent += '<div class="text-center">';
-                    htmlContent += '<button type="button" class="btn btn-primary" id="reservar-button" > Reservar</button>'
+
                     htmlContent += '</div>';
 
                     reservationConfirmationContainer.html(htmlContent);
     });
 
     $(document).on("click", "#reservar-button", function (e) {
-        console.log("RESERVARRRRR")
+        e.preventDefault();
+
+        // Retrieve the data attributes for reservation
+        const campoTitle = $(this).data("campo-title");
+        const selectedDate = datepickerInput.datepicker("getDate");
+        const formatedDate = selectedDate.toLocaleDateString("en-GB");
+        const selectedStartTime = $(this).data("slot-start-time");
+        const selectedEndTime = $(this).data("slot-end-time");
+
+        console.log("Reservarrrrr");
+        console.log(campoTitle);
+        console.log(selectedDate);
+        console.log(selectedStartTime);
+        console.log(selectedEndTime);
+        console.log(formatedDate);
+
+        // Make an AJAX request to create the reservation
+        $.ajax({
+            url: "/create_reserva/",
+            method: "POST",
+            data: {
+                campo_title: campoTitle,
+                date: selectedDate.toISOString(),
+                start_time: selectedStartTime,
+                end_time: selectedEndTime
+            },
+            success: function (data) {
+                // Handle success, e.g., show a success message
+                console.log("Reserva created successfully");
+                let htmlContent = '';
+                    htmlContent += '<div class="row no-gutters justify-content-center">';
+                        htmlContent += '<h1> A tua reserva foi realizada com sucesso, podes gerir a tua reserva na página' +
+                            ' "gestão de reservas" !</h1>';
+                    htmlContent += '</div>';
+
+                    reservationConfirmationContainer.html(htmlContent);
+            },
+            error: function (error) {
+                // Handle error, e.g., show an error message
+                console.log("Error creating reserva:", error.responseJSON.message);
+            }
+        });
     });
+
 
 </script>
 

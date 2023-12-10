@@ -12,6 +12,8 @@ from .views import (
         QuemSomosView,
         ParceriasView,
         search_campos,
+        create_reserva,
+        ReservasListView,
     )
 urlpatterns = [
     path("", home, name="home"),
@@ -23,4 +25,6 @@ urlpatterns = [
     path("quemsomos",  QuemSomosView.as_view(), name='quemsomos'),
     path("parcerias",  ParceriasView.as_view(), name='parcerias'),
     path("search_campos/", search_campos, name='search_campos'),
+    path("create_reserva/", create_reserva, name='create_reserva'),
+    path('user_reservas/', ReservasListView.as_view(), name='user_reservas'),
 ]

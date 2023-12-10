@@ -6,16 +6,20 @@ from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from datetime import datetime
+from django.utils import timezone
+from django.views.decorators.http import require_POST
 
-from .models import Campo, Categorie, Localizacao
+from .models import Campo, Categorie, Localizacao, Reserva
 from .forms import CampoForm
 from .utils import get_slots
 
 # Create your views here.
 
+
 def home(request):
     categories = Categorie.objects.all()
     return render(request, 'home.html', {'categories': categories})
+
 
 def get_localizacoes(request, category_id):
     localizacoes = Localizacao.objects.filter(categorie=category_id)
@@ -23,15 +27,15 @@ def get_localizacoes(request, category_id):
     return JsonResponse(localizacoes_data, safe=False)
 
 
-
-
 class CategorieListView(ListView):
     model = Categorie
     template_name = "categorie_list.html"
 
+
 class CampoListView(ListView):
     model = Campo
     template_name = "campo_list.html"
+
 
 class CampoCreateView(CreateView):
     model = Campo
@@ -43,11 +47,13 @@ class CampoCreateView(CreateView):
         form.instance.author = self.request.user  # Set the author to the logged-in user
         return super().form_valid(form)
 
+
 class CampoDeleteView(DeleteView):
     model = Campo
     template_name = "campo_delete.html"
 
     success_url = reverse_lazy("list-campos")
+
 
 class CampoEditView(UpdateView):
     model = Campo
@@ -55,21 +61,27 @@ class CampoEditView(UpdateView):
     form_class = CampoForm
     success_url = reverse_lazy("list-campos")
 
+
 class CampoDetailView(DetailView):
     model = Campo
     template_name = "campo_detail.html"
 
+
 class AdminPanelView(TemplateView):
     template_name = 'admin_panel.html'
+
 
 class ContactosView(TemplateView):
     template_name = 'contactos.html'
 
+
 class QuemSomosView(TemplateView):
     template_name = 'quem_somos.html'
 
+
 class ParceriasView(TemplateView):
     template_name = 'parcerias.html'
+
 
 def add_evaluation(request, campo_id, new_rating):
     # Retrieve the Campo instance
@@ -90,10 +102,12 @@ def add_evaluation(request, campo_id, new_rating):
     else:
         return JsonResponse({'error': 'Invalid rating value'})
 
+
 def display_slots(request, campo_id, selected_date):
     campo = Campo.objects.get(id=campo_id)
     slots = get_slots(campo, selected_date)
     return render(request, 'display_slots.html', {'campo': campo, 'selected_date': selected_date, 'slots': slots})
+
 
 def search_campos(request):
     # Retrieve search criteria from the request
@@ -124,3 +138,51 @@ def search_campos(request):
         })
 
     return JsonResponse({'matching_campos': campos_data})
+
+
+def create_reserva(request):
+    try:
+        # Retrieve data from the POST request
+        campo_title = request.POST.get('campo_title')
+        date = request.POST.get('date')
+        start_time = request.POST.get('start_time')
+        end_time = request.POST.get('end_time')
+        print(f"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+        print(f"campo_title: {campo_title}")
+        print(f"date: {date}")
+        print(f"start_time: {start_time}")
+        print(f"end_time: {end_time}")
+
+        campo = Campo.objects.get(title=campo_title)
+
+        # Create a new Reserva instance
+        reserva = Reserva.objects.create(
+            campo=campo,
+            date=date,
+            start_time=start_time,
+            end_time=end_time,
+            user=request.user
+            # Add other fields as needed
+        )
+
+        print(f"reserva criadaaaaaaaaaaaaaaa")
+
+        # Assuming success, you can return a JSON response
+        return JsonResponse({'success': True, 'message': 'Reserva created successfully'})
+
+    except Exception as e:
+        # Handle errors and return an appropriate response
+        return JsonResponse({'success': False, 'message': str(e)})
+
+
+class ReservasListView(ListView):
+    model = Reserva
+    template_name = "reservasfuturas.html"
+    context_object_name = "user_reservas"  # Optional: specify the variable name in the template
+
+    def get_queryset(self):
+        # Filter reservations for the current user
+        queryset = Reserva.objects.filter(user=self.request.user)
+        print(timezone.now())
+        print(queryset)
+        return queryset

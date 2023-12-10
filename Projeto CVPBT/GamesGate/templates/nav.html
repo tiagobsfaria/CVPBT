@@ -36,6 +36,7 @@
             </div>
         {% endif %}
     <div class="ms-auto">
+        <a class="btn btn-default me-2 text-info " href="{% url 'user_reservas' %}">Gerir as minhas reservas</a>
         <button class="btn btn-outline-secondary dropdown-toggle text-blue" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">My Profile</button>
         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
             <li><a class="dropdown-item" href="{% url 'user_data' %}">My Information - {{ user.username }}</a></li>
