@@ -2,21 +2,86 @@
 
 {% block content %}
     {% load static %}
-    <div class="container mt-4">
-        <h2>Your Reservations</h2>
-        {% if user_reservas %}
-            <ul>
+    <div class="container text-center rounded" style="background-color: rgba(13, 118, 139, 0.1);" >
+        <div class="row row-cols-1">
+            <div class="col fs-1 fw-bold">As tuas reservas futuras</div>
+            <br>
+        </div>
+        <div class="container mt-4 text-center">
+            {% if user_reservas %}
                 {% for reserva in user_reservas %}
-                    <li>
-                        <p>Campo: {{ reserva.campo.title }}</p>
-                        <p>Date: {{ reserva.date }}</p>
-                        <p>Date: {{ reserva.date|date:"Y-m-d" }}</p>
-                        <p>Time: {{ reserva.start_time }} - {{ reserva.end_time }}</p>
-                    </li>
+                    <div class="row no-gutters justify-content-center">
+                        <div class="col-6 p-0">
+                            <div class="image-container">
+                                <img src="{{ reserva.campo.image.url }}" class="img-fluid rounded" width="50%" height="30%">
+                            </div>
+                        </div>
+                        <div class="col-6 p-0">
+                            <div class="container mx-auto">
+                                <h3>{{ reserva.campo.title }}</h3>
+                                <p>Data: {{ reserva.date|date:"d-m-Y" }}</p>
+                                <p>Horário escolhido: {{ reserva.start_time|time:"H:i" }} - {{ reserva.end_time|time:"H:i" }}</p>
+                                <button class="btn btn-danger" onclick="cancelReserva({{ reserva.id }})">Cancelar Reserva</button>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <br>
                 {% endfor %}
-            </ul>
-        {% else %}
-            <p>You have no reservations.</p>
-        {% endif %}
+            {% else %}
+                <p>Não tens reservas futuras. Após fazeres uma reserva ela irá aparecer aqui!</p>
+            {% endif %}
+        </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+
+        const csrftoken = getCookie('csrftoken');
+
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+
+        function csrfSafeMethod(method) {
+            return /^(GET|HEAD|OPTIONS|TRACE)$/.test(method);
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function cancelReserva(reservaId) {
+            $.ajax({
+                url: "/cancel_reserva/",
+                method: "POST",
+                data: {
+                    reserva_id: reservaId
+                },
+                success: function (data) {
+                    console.log("Reserva canceled successfully");
+                     location.reload();
+                },
+                error: function (error) {
+                    // Handle error, e.g., show an error message
+                    console.log("Error canceling reserva:", error.responseJSON.message);
+                }
+            });
+        }
+    </script>
 {% endblock content %}

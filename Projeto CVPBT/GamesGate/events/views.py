@@ -7,6 +7,8 @@ from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from datetime import datetime
 from django.utils import timezone
+from django.contrib.auth.decorators import login_required
+
 from django.views.decorators.http import require_POST
 
 from .models import Campo, Categorie, Localizacao, Reserva
@@ -182,7 +184,32 @@ class ReservasListView(ListView):
 
     def get_queryset(self):
         # Filter reservations for the current user
-        queryset = Reserva.objects.filter(user=self.request.user)
+        queryset = Reserva.objects.filter(user=self.request.user, date__gte=timezone.now().date())
         print(timezone.now())
         print(queryset)
         return queryset
+
+
+class OldReservasListView(ListView):
+    model = Reserva
+    template_name = "user_information.html"
+    context_object_name = "old_reservas"
+
+    def get_queryset(self):
+        # Filter old reservations for the current user
+        queryset = Reserva.objects.filter(user=self.request.user, date__gte=timezone.now().date())
+        print(timezone.now())
+        print(queryset)
+        return queryset
+
+@login_required
+def cancel_reserva(request):
+    reserva_id = request.POST.get('reserva_id')
+
+    # Ensure the user has permission to cancel this reservation
+    reserva = get_object_or_404(Reserva, id=reserva_id, user=request.user)
+
+    # Perform cancelation logic here (e.g., delete the reservation)
+    reserva.delete()
+
+    return JsonResponse({'message': 'Reserva canceled successfully'})

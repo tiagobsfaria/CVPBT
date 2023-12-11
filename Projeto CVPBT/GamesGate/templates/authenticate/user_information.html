@@ -4,7 +4,7 @@
 
 {% load static %}
 
-<div class="container text-center rounded" style="background-color: #e1f7ed;">
+<div class="container text-center rounded" style="background-color: rgba(13, 118, 139, 0.1);">
     <div class="row row-cols-1">
         <div class="col fs-1 fw-bold">Meu Perfil</div>
     </div>
@@ -30,11 +30,22 @@
         </div>
         <div class="col-9">
             <div class="container">
-                <p class="fw-bold fs-3"> Últimas reservas </p>
+                <p class="fw-bold fs-3">Últimas reservas</p>
             </div>
             <br>
             <div class="image-container">
-
+                {% if old_reservas %}
+                    <ul>
+                        {% for reserva in old_reservas %}
+                            <li>
+                                <p>{{ reserva.date }}: {{ reserva.description }}</p>
+                                <!-- Add any other fields you want to display -->
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No old reservations found.</p>
+                {% endif %}
             </div>
         </div>
     </div>

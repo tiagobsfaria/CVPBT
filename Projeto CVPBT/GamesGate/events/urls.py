@@ -14,6 +14,9 @@ from .views import (
         search_campos,
         create_reserva,
         ReservasListView,
+        cancel_reserva,
+        OldReservasListView,
+
     )
 urlpatterns = [
     path("", home, name="home"),
@@ -27,4 +30,7 @@ urlpatterns = [
     path("search_campos/", search_campos, name='search_campos'),
     path("create_reserva/", create_reserva, name='create_reserva'),
     path('user_reservas/', ReservasListView.as_view(), name='user_reservas'),
+    path('cancel_reserva/', cancel_reserva, name='cancel_reserva'),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
